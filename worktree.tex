@@ -1,0 +1,50 @@
+\documentclass[epsf,preprint,aps,12pt,showpacs,nofootinbib,tightenlines]{revtex4}
+\usepackage{color}
+\textheight=24cm \textwidth=16cm \topmargin=-1cm
+\oddsidemargin=0.1cm \headheight=0cm
+\setlength{\baselineskip}{24pt} \hyphenation {pa-ra-me-ter
+pa-ra-me-ters}
+
+
+\begin{document}
+\center{Working tree of MCFM}\\
+\flushleft
+ 1. $\it{mcfm.f}$\\
+\quad 2. call $\it{mcfmsub.f}$\\
+\quad\quad  3-1. call $\it{determinefilenames(inputfile,workdir)}$ to give the name of input file and \\
+\quad\quad \quad\quad return it. \\
+\quad\quad  3-2. call $\it{mcfmmain(inputfile,workdir)}$ \\
+\quad\quad\quad  4-1. call $\it{mcfm\_init(inputfile,workdir)}$ to initialize the necessary variables and\\
+\quad\quad\quad\quad\quad set  up the usual print-outs.\\
+\quad\quad\quad\quad  5-1. call $\it{banner.f}$ to print the welcome banner.\\
+\quad\quad\quad\quad   5-2. call ${\color{red}\it{reader\_input(inputfile,workdir)}}$  to read in the file ${\color{red}\it{input.DAT}}$.\\
+\quad\quad\quad\quad\quad  6-1.  call $\it{checkversion.f}$ to check if the version of $\it{input.DAT}$ match that of \\\quad\quad\quad\quad\quad\quad\quad the code.\\ 
+\quad\quad\quad\quad\quad  6-2. open and read the file $\it{input.DAT}$. Call ${\color{red}\it{write input.f}}$ to output the items\\ \quad\quad\quad\quad\quad\quad\quad in $\it{input.DAT}$. \\
+\quad\quad\quad\quad\quad  6-3. call ${\color{red}\it{chooser.f}}$.\\
+\quad\quad\quad\quad\quad\quad 7-1. open and read file ${\color{red}\it{process.DAT}}$. In $\it{process.DAT}$ file the number in\\
+\quad\quad\quad\quad\quad\quad\quad\quad each line is $\it{mproc}$. The character string $'  f(p1)+f(p2) \to \cdot\cdot\cdot '$ is \\
+\quad\quad\quad\quad\quad\quad\quad\quad $\it{pname}$. The last character string $\it{'N'}$ or $\it{'L'}$ is $\it{"order"}$ which means\\
+\quad\quad\quad\quad\quad\quad\quad\quad NLO or LO in perturbative calculation.\\
+\quad\quad\quad\quad\quad\quad 7-2. call $\it{checkversion.f}$ to check if the version of $\it{input.DAT}$ match that \\ \quad\quad\quad\quad\quad\quad\quad\quad of the code. \\ 
+\quad\quad\quad\quad\quad\quad 7-3. select the to-be-calculated process by using $\it{mproc .eq. nproc}$ where \\ \quad\quad\quad\quad\quad\quad\quad\quad $\it{nproc}$ is an input integral in $\it{input.DAT}$ to denote the number of the \\ \quad\quad\quad\quad\quad\quad\quad\quad process.\\
+\quad\quad\quad\quad\quad\quad 7-4. call ${\color{red}\it{coupling.f}}$.\\
+
+\quad\quad\quad\quad\quad\quad\quad 8-1. call $\it{pdfwrap.f}$ to initialize the pdf set.\\
+\quad\quad\quad\quad\quad\quad\quad 8-2. read in the EW parameters, CKM matrix and $\it{\alpha_s}$.\\
+\quad\quad\quad\quad\quad\quad 7-5.  assign value to the character variable $\it{case}$ for each specific  process. \\ \quad\quad\quad\quad\quad\quad\quad\quad Take process $gg \to H \to ZZ \to e^-e^+\mu^-\mu^+$ as an example, the value \\ \quad\quad\quad\quad\quad\quad\quad\quad of $case$ is $\it{'HZZ\_tb'}$ and the number of the process is 128.\\
+\quad\quad\quad\quad\quad\quad 7-6. call subroutine ${\color{red}\it{sethparams.f}}$ to give the parameters for a SM Higgs \\ \quad\quad\quad\quad\quad\quad\quad\quad boson.\\
+\quad\quad\quad\quad\quad\quad 7-7. call $\it{setvdecay.f}$ to set up particle labels and couplings for vector \\ \quad\quad\quad\quad\quad\quad\quad\quad bosons. Here in the example, it is $\it{Z}$ boson.\\
+\quad\quad\quad\quad\quad\quad 7-8. call ${\color{red}\it{coupling2.f}}$ to input the pdf, EW parameters, CKM and $\it{\alpha_s}$\\
+
+\quad\quad\quad\quad 5-3. call ${\color{red}\it{setrunname.f}}$ to set up the run name.\\
+\quad\quad\quad\quad 5-4. call $\it{nplotter.f}$ to initialize all histograms.\\
+\quad\quad\quad 4-2. call $\it{mcfm\_vegas.f}$ to do the Vegas integration.\\
+\quad\quad\quad\quad  5-1. call $\it{vegasnr(a,b,{\color{red}lowint},c,d,e,f,g,h,i)}$. The function $\it{lowing}$ use \\ \quad\quad\quad\quad\quad\quad\quad \quad \quad elseif (case .eq. $\it{'HZZ\_tb'}$) then call ${\color{red}gg\_hzz\_tb(p,msq)}$\\  \quad\quad\quad\quad\quad\quad to calculate the example process matrix element square. \\
+\quad\quad\quad\quad\quad  6-1.  call ${\color{red}\it{getggHZZamps(p,ggH\_bquark,ggH\_tquark)}}$ to calculate the \\
+\quad\quad\quad\quad\quad\quad\quad ampletude for the b-quark and t-quark triangle loop contributions to the\\
+\quad\quad\quad\quad\quad\quad\quad example process by using the equations in Sec.2.1 of arXiv:1311.3589.\\
+
+\quad\quad\quad 4-3. call $\it{mcfm\_exit.f}$ to perform the final processing and print-outs.\\
+
+
+\end {document}
